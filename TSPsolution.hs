@@ -1,11 +1,11 @@
-module TSPsolution (solve) where
+module TSPsolution (solve,showSolution) where
 
 import qualified CombinatorialOptimisation.TSP as TSP
-showSolution :: [a] -> String 
-showSolution a = "solution"
+showSolution :: TSP.TSPProblem -> String 
+showSolution a = show (solve a)
 
 
--- solve :: TSP.TSPProblem -> [Int]
--- solve i = undefined
-solve i = TSP.showEdgeWeights i
-
+-- solve :: TSP.TSPProblem -> [Floating a]
+solve i =  
+      where findMin  = (maximum).(map (TSP.edgeCost i 0)) [0..((TSP.numCities i)-1)] 
+-- solve i = ((maximum).(TSP.edgeCost i 0)) [0..(TSP.numCities-1)] 

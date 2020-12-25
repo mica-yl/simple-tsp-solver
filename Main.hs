@@ -7,4 +7,4 @@ main = do
    let file = "/home/loxymondor/docs/facu/4th/sem1/AI/proj/TSP-Problems/problem1.tsp" 
    x <- FF.loadTSPFile TSP.ExplicitMatrix file
    putStr (showSolution x)
-      where showSolution = S.solve
+      where showSolution = S.showSolution 

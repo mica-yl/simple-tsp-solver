@@ -1,0 +1,6 @@
+/trash/
+/lib/
+*.o
+*.hi
+tsp-haskell/
+Main
