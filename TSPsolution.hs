@@ -12,11 +12,10 @@ kick :: (Eq a) => a -> [a] -> [a]
 kick n xs = filter (/=n) xs
 
 nextMin :: TSP.TSPProblem -> Int -> [Int] -> Int
-nextMin tsp sp uv = fst ( DL.foldl' minWeight (sp,inf) uv') 
+nextMin tsp sp uv = fst ( DL.foldl' minWeight (sp,inf) uv) 
    where 
 --           minWeight ::  Floating a =>  (Ord (Int -> a ))  => (Int,Int -> a) -> Int -> (Int,Int -> a)
          inf = 9999
-         uv' = kick sp uv
          minWeight a@(_,w) b       | w < w'    = a
                                    | otherwise = b'
           where w' = TSP.edgeCost tsp sp b
@@ -31,8 +30,8 @@ solve problem unvisted startpoint = [(startpoint, costOfNextStep) ]
                                     ++
                                     (solve problem unvisted' startpoint' ) 
       where 
-            startpoint' = (nextMin problem startpoint unvisted)
             unvisted' = (kick startpoint unvisted) 
+            startpoint' = (nextMin problem startpoint unvisted')
             costOfNextStep = TSP.edgeCost problem startpoint startpoint'
 --             unvisted' = kick startpoint' (kick startpoint unvisted) 
 -- ((maximum).(map (TSP.edgeCost p s))) uv 
