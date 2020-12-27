@@ -26,7 +26,7 @@ library:
   source-dirs: src
 
 executables:
-  tsp-solver-exe:
+  tsp-solver:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
