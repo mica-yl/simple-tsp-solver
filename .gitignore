@@ -1,7 +1,6 @@
-/trash/
+.stack-work/
+*~/trash/
 /lib/
-*.o
-*.hi
 tsp-haskell/
 Main
 /resources/
