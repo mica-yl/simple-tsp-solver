@@ -14,7 +14,7 @@ kick n xs = filter (/=n) xs
 nextMin :: TSP.TSPProblem -> Int -> [Int] -> Int
 nextMin tsp sp uv = fst ( DL.foldl' minWeight (sp,inf) uv) 
    where 
---           minWeight ::  Floating a =>  (Ord (Int -> a ))  => (Int,Int -> a) -> Int -> (Int,Int -> a)
+--          minWeight ::  Floating a =>  (Ord (Int -> a ))  => (Int,Int -> a) -> Int -> (Int,Int -> a)
          inf = 9999
          minWeight a@(_,w) b       | w < w'    = a
                                    | otherwise = b'

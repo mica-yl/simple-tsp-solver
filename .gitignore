@@ -4,3 +4,4 @@
 *.hi
 tsp-haskell/
 Main
+/resources/
