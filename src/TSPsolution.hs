@@ -4,9 +4,15 @@ import qualified CombinatorialOptimisation.TSP as TSP
 import qualified Data.List as DL (foldl',unlines) 
 
 showSolution :: TSP.TSPProblem -> String 
-showSolution a = (DL.unlines . (map show2T)) solution
+showSolution a = ((DL.unlines . (map show2T)) solution)
+                 ++
+                 "\n Total cost :" ++ (show (pathCost solution))
   where solution =(solve a [0..((TSP.numCities a)-1)] 0 0 )
         show2T (a,b) = (show a) ++ "\t" ++ (show b) 
+
+pathCost :: Floating a => [(Int,a)] -> a
+pathCost path = DL.foldl' costSum 0  path 
+     where costSum sum node = sum + (snd node)
 
 kick :: (Eq a) => a -> [a] -> [a]
 kick n xs = filter (/=n) xs

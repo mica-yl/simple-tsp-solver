@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: cf17810b51d4b4e885dfd7f2dff82cc4831e50b046eaae3f8a6fb7a066442cd6
+-- hash: 56eba7c54a924dcceb97baa64d14873a7c498e3c21efe96feba41bc58dcdb7b5
 
 name:           tsp-solver
 version:        0.1.0.0
@@ -28,6 +28,7 @@ source-repository head
 library
   exposed-modules:
       TSPsolution
+      Types
   other-modules:
       Paths_tsp_solver
   hs-source-dirs:
