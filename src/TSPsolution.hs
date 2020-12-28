@@ -23,11 +23,11 @@ type Path = [(Node,Cost)]
 
 pathCost :: Path -> Cost
 pathCost path = DL.foldl' costSum 0  path 
-     where costSum sum node = sum + (snd node)
+      where costSum sum node = sum + (snd node)
 
 nextMin :: TSP.TSPProblem -> Node -> [Node] -> Node
 nextMin tsp sp uv = fst ( DL.foldl' minWeight (sp,inf) uv) 
-   where 
+      where 
          inf = 9999
 --          minWeight ::  Floating a =>  (Ord (Int -> a ))  => (Int,Int -> a) -> Int -> (Int,Int -> a)
          minWeight a@(_,w) b       | w < w'    = a
@@ -49,15 +49,20 @@ solve problem unvisted root startpoint = [(startpoint, costOfNextStep) ]
             startpoint' = (nextMin problem startpoint unvisted')
             costOfNextStep = TSP.edgeCost problem startpoint startpoint'
 
+-- multi start point solve
+---------------------------
+-- solve using all points as a start point
 
 multiSolve ::  TSP.TSPProblem  -> [Node] -> Path
-multiSolve p nodes = choosePath (map (\sp -> solve p nodes sp sp) nodes )
-      where choosePath :: [Path] -> Path  
-            choosePath paths = fst (DL.foldl' minCost dummy paths)
-             where dummyPath = (last paths)
-                   dummy = (dummyPath , (pathCost dummyPath ) )
---                    minCost :: Floating a => [(Int,a)] -> [(Int,a)] -> (a,[(Int,a)]) 
-                   minCost :: (Path,Cost) -> Path -> (Path,Cost) 
-                   minCost n@(_,c) p' | c' < c     = (p',c')
-                                      | otherwise  = n 
-                        where c' = (pathCost p')
+multiSolve p nodes = chooseLCPath paths
+      where paths = (map (\sp -> solve p nodes sp sp) nodes )
+
+chooseLCPath :: [Path] -> Path  
+chooseLCPath paths = fst (DL.foldl' minCost dummy paths)
+      where dummyPath = (last paths)
+            dummy = (dummyPath , (pathCost dummyPath ) )
+
+minCost :: (Path,Cost) -> Path -> (Path,Cost) 
+minCost n@(_,c) p' | c' < c     = (p',c')
+                   | otherwise  = n 
+      where c' = (pathCost p')

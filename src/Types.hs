@@ -4,8 +4,8 @@ data Node = Node Int
            
 data Link x = Link {
            a    :: Node,
-           cost :: x,
-           b    :: Node}
+           cost :: Double,
+           b    :: Node }
 data Path a = Path a (Link a) (Path a)
             | EndOfPath
                   
