@@ -5,7 +5,7 @@ import qualified Data.List as DL (foldl',unlines)
 
 showSolution :: TSP.TSPProblem -> String 
 showSolution a = (DL.unlines . (map show2T)) solution
-  where solution =(solve a [1..((TSP.numCities a)-1)] 0 )
+  where solution =(solve a [0..((TSP.numCities a)-1)] 0 0 )
         show2T (a,b) = (show a) ++ "\t" ++ (show b) 
 
 kick :: (Eq a) => a -> [a] -> [a]
@@ -22,12 +22,13 @@ nextMin tsp sp uv = fst ( DL.foldl' minWeight (sp,inf) uv)
                 b' = (b,w') 
 -- nextMin _ _ [] = 
 
-solve :: Floating a => TSP.TSPProblem  -> [Int] -> Int -> [(Int,a)]
-solve _ [] _   = [] 
+solve :: Floating a => TSP.TSPProblem  -> [Int] -> Int -> Int -> [(Int,a)]
+solve _ []  _  _            = [] 
+solve p [a] r  s  | a == s  = [(a,TSP.edgeCost p a r )]
 
-solve problem unvisted startpoint = [(startpoint, costOfNextStep) ] 
-                                    ++
-                                    (solve problem unvisted' startpoint' ) 
+solve problem unvisted root startpoint = [(startpoint, costOfNextStep) ] 
+                                         ++
+                                         (solve problem unvisted' root startpoint' ) 
       where 
             unvisted' = (kick startpoint unvisted) 
             startpoint' = (nextMin problem startpoint unvisted')

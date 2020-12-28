@@ -1,4 +1,5 @@
 module Main where
+
 import qualified CombinatorialOptimisation.TSP as TSP
 import qualified FileFormat.TSPLIB as FF 
 import qualified TSPsolution as S
@@ -9,7 +10,7 @@ solvefile tspfile  =do tsp <- FF.loadTSPFile TSP.ExplicitMatrix (tspfile)
                         where showSolution = S.showSolution
 
 
--- read :: IO a -> IO b
+main :: IO ()
 main = do 
 --    let tspPath = "/home/loxymondor/docs/facu/4th/sem1/AI/proj/TSP-Problems/"
 --    let file = "problem1.tsp" 
