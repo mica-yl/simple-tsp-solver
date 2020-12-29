@@ -5,8 +5,16 @@ import qualified FileFormat.TSPLIB as FF
 import qualified TSPsolution as S
 import qualified System.Environment as SE (getArgs)
 
+-- showTSP :: [Char] -> ( [S.Node] ,S.Cost ,S.Cost )
+showTSP tspfile p = do x <- FF.loadTSPFile TSP.ExplicitMatrix (tspfile)
+                       putStrLn (show (c x))
+                         where  
+                               c x = S.costOP x (p)
+--                                v x = TSP.solutionValue x 
+
+
 solvefile tspfile  =do tsp <- FF.loadTSPFile TSP.ExplicitMatrix (tspfile)
-                       putStr (showSolution tsp)
+                       putStrLn (showSolution tsp)
                         where showSolution = S.showSolution
 
 

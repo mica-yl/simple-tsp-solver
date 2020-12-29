@@ -8,4 +8,7 @@ data Link x = Link {
            b    :: Node }
 data Path a = Path a (Link a) (Path a)
             | EndOfPath
-                  
+data PathType =  Line
+               | Circle                  
+data Direction = Forward
+                |Backward
