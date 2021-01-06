@@ -1,0 +1,10 @@
+cradle:
+  stack:
+    - path: "./src"
+      component: "tsp-solver:lib"
+
+    - path: "./app/Main.hs"
+      component: "tsp-solver:exe:tsp-solver"
+
+    - path: "./test"
+      component: "tsp-solver:test:tsp-solver-test"
