@@ -7,7 +7,7 @@ import qualified Data.Tuple as DT (swap)
 import qualified Types as Tp 
 
 showSolution :: TSP.TSPProblem -> String 
-showSolution problem = ((DL.unlines . (map show2T)) solution )
+showSolution problem = (DL.unlines . map show2T $ solution )
                  ++
                  "\n Total cost :" ++ (show (pathCost solution))
   where 
@@ -43,7 +43,7 @@ costOP p path = costOfPath p Tp.Circle Tp.Forward path
 
 
 nextMin :: TSP.TSPProblem -> Node -> [Node] -> Node
-nextMin tsp sp uv = fst ( DL.foldl' minWeight (sp,inf) uv) 
+nextMin tsp sp uv = fst . DL.foldl' minWeight (sp,inf) $ uv 
       where 
          inf = 9999999
 --          minWeight ::  Floating a =>  (Ord (Int -> a ))  => (Int,Int -> a) -> Int -> (Int,Int -> a)
@@ -52,24 +52,32 @@ nextMin tsp sp uv = fst ( DL.foldl' minWeight (sp,inf) uv)
           where w' = TSP.edgeCost tsp sp b
                 b' = (b,w') 
 -- nextMin _ _ [] = 
-
+pQ :: TSP.TSPProblem -> Node -> [Node] -> [Node]
+-- untested priority queue
+pQ tsp n uv = h : pQ tsp n uv'
+      where h       = minNode uv
+            minNode = nextMin tsp n 
+            uv'     = kick h uv
 
 solve :: TSP.TSPProblem  -> [Node] -> Node -> Node -> Path
 solve _ []  _  _            = [] 
 solve p [a] r  s  | a == s  = [(a,TSP.edgeCost p a r )]
 
-solve problem unvisted root startpoint = [(startpoint, costOfNextStep) ] 
-                                         ++
-                                         (solve problem unvisted' root startpoint' ) 
+solve problem unvisted root startpoint 
+      = [(startpoint, costOfNextStep) ] 
+             ++
+        (solve problem unvisted' root startpoint' ) 
       where 
-            unvisted' = (kick startpoint unvisted) 
-            startpoint' = (nextMin problem startpoint unvisted')
-            costOfNextStep = TSP.edgeCost problem startpoint startpoint'
+         unvisted' = (kick startpoint unvisted) 
+         startpoint' = (nextMin problem startpoint unvisted')
+         costOfNextStep = TSP.edgeCost problem startpoint startpoint'
 
 -- multi start point solve
 ---------------------------
 -- solve using all points as a start point
-
+-----
+--this one impelements NN heuristic
+--
 multiSolve ::  TSP.TSPProblem  -> [Node] -> Path
 multiSolve p nodes =  normalizePath (chooseLCPath paths) 0
       where paths = (map (\sp -> solve p nodes sp sp) nodes )
@@ -77,7 +85,7 @@ multiSolve p nodes =  normalizePath (chooseLCPath paths) 0
 chooseLCPath :: [Path] -> Path  
 chooseLCPath [] = []
 chooseLCPath [a] = a 
-chooseLCPath paths@(h:t) = fst (DL.foldl' minCost h' t)
+chooseLCPath paths@(h:t) = fst . DL.foldl' minCost h' $ t
       where 
             h' = (h , (pathCost h ) )
 -- try it with @[h:t] to use head as the base case
@@ -88,6 +96,6 @@ minCost n@(_,c) p' | c' < c     = (p',c')
       where c' = (pathCost p')
 
 normalizePath :: Path -> Node -> Path
-normalizePath path root = (dropWhile root' path)++(takeWhile root' path) 
+normalizePath path root = dropWhile root' path ++ takeWhile root' path 
            where root'  (n',_) | root/=n'  = True
                                | otherwise = False  

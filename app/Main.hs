@@ -12,7 +12,7 @@ showTSP tspfile p = do x <- FF.loadTSPFile TSP.ExplicitMatrix (tspfile)
                                c x = S.costOP x (p)
 --                                v x = TSP.solutionValue x 
 
-
+solvefile :: String -> IO () 
 solvefile tspfile  =do tsp <- FF.loadTSPFile TSP.ExplicitMatrix (tspfile)
                        putStrLn (showSolution tsp)
                         where showSolution = S.showSolution
