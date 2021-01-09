@@ -1,35 +1,25 @@
 -- module TSPsolution (solve,showSolution,multiSolve,costOP,costOfPath) where
-module TSPsolution where
+module TSPutils where
 
 import qualified CombinatorialOptimisation.TSP as TSP
-import qualified Data.List as DL (foldl',unlines) 
+import qualified Data.List as DL (foldl') 
 import qualified Data.Tuple as DT (swap)
 import qualified Types as Tp 
-
-showSolution :: TSP.TSPProblem -> String 
-showSolution problem = (DL.unlines . map show2T $ solution )
-                 ++
-                 "\n Total cost :" ++ (show (pathCost solution))
-  where 
---         solution =(solve a [0..((TSP.numCities a)-1)] 0 0 )
-        solution =(multiSolve problem [0..((TSP.numCities problem)-1)])
-        show2T (a,b) = (show a) ++ "\t" ++ (show b) 
-
-
 
 kick :: (Eq a) => a -> [a] -> [a]
 kick n xs = filter (/=n) xs
 
 type Cost = Double  
 type Node = Int
-type Path = [(Node,Cost)]
+type CPath = [(Node,Cost)]
+type Path = [Node]
 
 
-pathCost :: Path -> Cost
+pathCost :: CPath -> Cost
 pathCost path = DL.foldl' costSum 0  path 
       where costSum sum node = sum + (snd node)
 
-costOfPath :: TSP.TSPProblem -> Tp.PathType -> Tp.Direction  -> [Node] -> Cost
+costOfPath :: TSP.TSPProblem -> Tp.PathType -> Tp.Direction  -> Path -> Cost
 costOfPath _ _   _   []         = 0  
 costOfPath p typ dir path@(h:t) = DL.foldl' costof 0 path'
       where path' = case typ of 
@@ -59,7 +49,30 @@ pQ tsp n uv = h : pQ tsp n uv'
             minNode = nextMin tsp n 
             uv'     = kick h uv
 
-solve :: TSP.TSPProblem  -> [Node] -> Node -> Node -> Path
+chooseLCPath :: [CPath] -> CPath  
+-- choose least cost path
+chooseLCPath [] = []
+chooseLCPath [a] = a 
+chooseLCPath paths@(h:t) = fst . DL.foldl' minCostCPath h' $ t
+      where 
+            h' = (h , (pathCost h ) )
+
+minCostCPath :: (CPath,Cost) -> CPath -> (CPath,Cost) 
+
+minCostCPath n@(_,c) p' | c' < c     = (p',c')
+                        | otherwise  = n 
+      where c' = (pathCost p')
+
+normalizePath :: CPath -> Node -> CPath
+-- make any path start from City #0 
+normalizePath path root = dropWhile root' path ++ takeWhile root' path 
+           where root'  (n',_) | root/=n'  = True
+                               | otherwise = False  
+
+solve :: TSP.TSPProblem  -> [Node] -> Node -> Node -> CPath
+-- NN solver : choose least cost link and jump to .
+--  no backtracking
+--this one impelements NN heuristic
 solve _ []  _  _            = [] 
 solve p [a] r  s  | a == s  = [(a,TSP.edgeCost p a r )]
 
@@ -72,30 +85,13 @@ solve problem unvisted root startpoint
          startpoint' = (nextMin problem startpoint unvisted')
          costOfNextStep = TSP.edgeCost problem startpoint startpoint'
 
+
+multiSolve ::  TSP.TSPProblem  -> [Node] -> CPath
 -- multi start point solve
 ---------------------------
 -- solve using all points as a start point
 -----
---this one impelements NN heuristic
 --
-multiSolve ::  TSP.TSPProblem  -> [Node] -> Path
 multiSolve p nodes =  normalizePath (chooseLCPath paths) 0
       where paths = (map (\sp -> solve p nodes sp sp) nodes )
 
-chooseLCPath :: [Path] -> Path  
-chooseLCPath [] = []
-chooseLCPath [a] = a 
-chooseLCPath paths@(h:t) = fst . DL.foldl' minCost h' $ t
-      where 
-            h' = (h , (pathCost h ) )
--- try it with @[h:t] to use head as the base case
-
-minCost :: (Path,Cost) -> Path -> (Path,Cost) 
-minCost n@(_,c) p' | c' < c     = (p',c')
-                   | otherwise  = n 
-      where c' = (pathCost p')
-
-normalizePath :: Path -> Node -> Path
-normalizePath path root = dropWhile root' path ++ takeWhile root' path 
-           where root'  (n',_) | root/=n'  = True
-                               | otherwise = False  

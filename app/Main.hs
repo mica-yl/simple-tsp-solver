@@ -2,20 +2,20 @@ module Main where
 
 import qualified CombinatorialOptimisation.TSP as TSP
 import qualified FileFormat.TSPLIB as FF 
-import qualified TSPsolution as S
+import qualified PrettySolution as P
 import qualified System.Environment as SE (getArgs)
 
 -- showTSP :: [Char] -> ( [S.Node] ,S.Cost ,S.Cost )
-showTSP tspfile p = do x <- FF.loadTSPFile TSP.ExplicitMatrix (tspfile)
-                       putStrLn (show (c x))
-                         where  
-                               c x = S.costOP x (p)
+-- showTSP tspfile p = do x <- FF.loadTSPFile TSP.ExplicitMatrix (tspfile)
+--                        putStrLn (show (c x))
+--                          where  
+--                                c x = S.costOP x (p)
 --                                v x = TSP.solutionValue x 
 
 solvefile :: String -> IO () 
 solvefile tspfile  =do tsp <- FF.loadTSPFile TSP.ExplicitMatrix (tspfile)
                        putStrLn (showSolution tsp)
-                        where showSolution = S.showSolution
+                        where showSolution = P.showSolution
 
 
 main :: IO ()
