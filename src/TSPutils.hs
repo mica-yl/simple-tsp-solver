@@ -49,7 +49,7 @@ pQ tsp n uv = h : pQ tsp n uv'
             minNode = nextMin tsp n 
             uv'     = kick h uv
 
-getPathfromCPath :: [CPath] -> Path
+getPathfromCPath :: CPath -> Path
 getPathfromCPath cpath = map extractor cpath
       where extractor (n,c) = n
 
