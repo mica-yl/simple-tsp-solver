@@ -41,13 +41,18 @@ nextMin tsp sp uv = fst . DL.foldl' minWeight (sp,inf) $ uv
                                    | otherwise = b'
           where w' = TSP.edgeCost tsp sp b
                 b' = (b,w') 
--- nextMin _ _ [] = 
+
 pQ :: TSP.TSPProblem -> Node -> [Node] -> [Node]
 -- untested priority queue
 pQ tsp n uv = h : pQ tsp n uv'
       where h       = minNode uv
             minNode = nextMin tsp n 
             uv'     = kick h uv
+
+getPathfromCPath :: [CPath] -> Path
+getPathfromCPath cpath = map extractor cpath
+      where extractor (n,c) = n
+
 
 chooseLCPath :: [CPath] -> CPath  
 -- choose least cost path
@@ -57,17 +62,21 @@ chooseLCPath paths@(h:t) = fst . DL.foldl' minCostCPath h' $ t
       where 
             h' = (h , (pathCost h ) )
 
-minCostCPath :: (CPath,Cost) -> CPath -> (CPath,Cost) 
-
-minCostCPath n@(_,c) p' | c' < c     = (p',c')
-                        | otherwise  = n 
-      where c' = (pathCost p')
+            minCostCPath :: (CPath,Cost) -> CPath -> (CPath,Cost) 
+            -- to be used with fold
+            minCostCPath n@(_,c) p' | c' < c     = (p',c')
+                                    | otherwise  = n 
+                  where c' = (pathCost p')
 
 normalizePath :: CPath -> Node -> CPath
 -- make any path start from City #0 
 normalizePath path root = dropWhile root' path ++ takeWhile root' path 
            where root'  (n',_) | root/=n'  = True
                                | otherwise = False  
+
+allCities :: TSP.TSPProblem -> [Node]
+-- return a list of all cities in a problem 
+allCities problem = [0..((TSP.numCities problem)-1)]
 
 solve :: TSP.TSPProblem  -> [Node] -> Node -> Node -> CPath
 -- NN solver : choose least cost link and jump to .
@@ -86,12 +95,12 @@ solve problem unvisted root startpoint
          costOfNextStep = TSP.edgeCost problem startpoint startpoint'
 
 
-multiSolve ::  TSP.TSPProblem  -> [Node] -> CPath
+multiSolve ::  TSP.TSPProblem  -> CPath
 -- multi start point solve
 ---------------------------
 -- solve using all points as a start point
 -----
 --
-multiSolve p nodes =  normalizePath (chooseLCPath paths) 0
+multiSolve p =  normalizePath (chooseLCPath paths) 0
       where paths = (map (\sp -> solve p nodes sp sp) nodes )
-
+            nodes = (allCities p)

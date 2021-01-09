@@ -11,6 +11,6 @@ showSolution problem = (DL.unlines . map show2T $ solution )
                  ++
                  "\n Total cost :" ++ (show (U.pathCost solution))
   where 
-        solution =(U.multiSolve problem [0..((TSP.numCities problem)-1)])
+        solution =(U.multiSolve problem)
         show2T (a,b) = (show a) ++ "\t" ++ (show b) 
 
