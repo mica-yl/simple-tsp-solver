@@ -68,6 +68,24 @@ chooseLCPath paths@(h:t) = fst . DL.foldl' minCostCPath h' $ t
                                     | otherwise  = n 
                   where c' = (pathCost p')
 
+selectLCPath :: TSP.TSPProblem -> [Path] -> Path  
+
+-- choose least cost path
+-- not working 
+selectLCPath _ [] = []
+selectLCPath _ [a] = a 
+selectLCPath p paths@(h:t) = fst . DL.foldl' minCostPath h' $ t
+      where 
+            h' = (h , (costOfPath' h) )
+
+            minCostPath :: (Path,Cost) -> Path -> (Path,Cost) 
+            -- to be used with fold
+            minCostPath n@(_,c) p' | c' < c     = (p',c')
+                                    | otherwise  = n 
+                  where c' = (costOfPath' p')
+            costOfPath' = costOfPath p Tp.Circle Tp.Forward
+
+
 normalizePath :: CPath -> Node -> CPath
 -- make any path start from City #0 
 normalizePath path root = dropWhile root' path ++ takeWhile root' path 

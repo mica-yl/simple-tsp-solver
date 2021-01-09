@@ -15,7 +15,8 @@ import qualified System.Environment as SE (getArgs)
 solvefile :: String -> IO () 
 solvefile tspfile  =do tsp <- FF.loadTSPFile TSP.ExplicitMatrix (tspfile)
                        putStrLn (showSolution tsp)
-                        where showSolution = P.showSolution
+                        where showSolution = P.showAgent
+--P.showSolution
 
 
 main :: IO ()
