@@ -44,6 +44,7 @@ nextMin tsp sp uv = fst . DL.foldl' minWeight (sp,inf) $ uv
 
 pQ :: TSP.TSPProblem -> Node -> [Node] -> [Node]
 -- untested priority queue
+pQ _   _ [] = []
 pQ tsp n uv = h : pQ tsp n uv'
       where h       = minNode uv
             minNode = nextMin tsp n 
