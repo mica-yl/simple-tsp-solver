@@ -6,5 +6,8 @@ cradle:
     - path: "./app/Main.hs"
       component: "tsp-solver:exe:tsp-solver"
 
+    - path: "./app/Paths_tsp_solver.hs"
+      component: "tsp-solver:exe:tsp-solver"
+
     - path: "./test"
       component: "tsp-solver:test:tsp-solver-test"

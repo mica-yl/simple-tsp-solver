@@ -4,7 +4,7 @@ github:              "miko99/tsp-solver"
 license:             BSD3
 author:              "mikel"
 maintainer:          "mikosimo0@gmail.com"
-copyright:           "2020 mikel"
+copyright:           "GPL"
 
 extra-source-files:
 - README.md
@@ -33,7 +33,8 @@ executables:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
-#    "$everything" : -haddock
+#    - -O2
+#    - "$everything" : -haddock
     dependencies:
     - tsp-solver
 

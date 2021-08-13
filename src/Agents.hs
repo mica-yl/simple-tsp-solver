@@ -93,3 +93,13 @@ genericSolver' p sortNext quitFunc bestSol totalCost visited (Just curNode)
        nextNodes = nextNodes' 
             -- exclude visited nodes from allCities
 
+-- pathGen 
+
+pathGen :: TSP.TSPProblem -> Path'
+pathGen = undefined
+
+
+
+
+
+
